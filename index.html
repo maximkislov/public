@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+</head>
+<script>
+	var sum = 0;
+	jQuery(document).ready(function() {
+		jQuery('#zero').on('click', function(event) {
+			if ($(this).is(':checked')) {
+				$("input").attr("disabled", true);
+				sum = 0;
+				$('#result').append('<p><input disabled name=sumOut value=' + Number(sum) + '></p>');
+			}
+		});
+	});
+
+
+	jQuery(document).ready(function() {
+		jQuery('.check').on('click', function(event) {
+			if ($(this).is(':checked')) {
+
+				sum += Number($(this).val());
+
+				$('#result').append('<p><input disabled name=sumOut value=' + Number(sum) + '></p>');
+			}
+		});
+	});
+
+
+	function bit_analysis(n) {
+
+		var bin_powers = new Array();
+		for (var bit = 0; bit < 5; bit++) {
+			var bin_power = 1 << bit;
+			if (bin_power & n) {
+				bin_powers[bit] = bin_power;
+			}
+		}
+		return bin_powers;
+	}
+
+
+	jQuery(document).ready(function() {
+		jQuery('#quantity, #zero').keyup(function(event) {
+
+			var Value = $('#quantity').val();
+			var ValueCheck = $('#zero').val();
+
+			if (!Value || 0 === Value.length) {
+
+				$('.check').each(function() {
+					this.checked = false;
+				});
+
+			} else if (Value == 0) {
+				sum = 0;
+				$('#zero').prop('checked', true);
+				$("input").attr("disabled", true);
+				$('#result').append('<p><input disabled name=sumOut value=' + Number(sum) + '></p>');
+			}
+
+		});
+
+	});
+
+
+	jQuery(document).ready(function() {
+		jQuery('#quantity').keyup(function(event) {
+
+			var ValueInput = Number($('#quantity').val());
+			var array = [];
+			var array = bit_analysis(ValueInput);
+
+			if ($("#quantity").val().length > 0 && !/^\d+$/.test($("#quantity").val()) || $("#quantity").val() > 31) {
+				alert("Ошибка. Вы ввели число не входящее в диапозон. Введите от 1 до 31.");
+			}
+
+			$.each(array, function(index, value) {
+				jQuery('.check, #quantity').keyup(function(event) {
+
+					if (value > 0) {
+
+						$('.check')[index].checked = true;
+
+					} else {
+
+						$('.check')[index].checked = false;
+
+					}
+
+					if ($("#quantity").val().length == 0) {
+
+						$('.check').each(function() {
+							this.checked = false;
+						});
+
+					}
+
+				});
+
+			});
+		});
+	});
+</script>
+
+<body>
+	<div class="container">
+		<form method="post">
+			<p><input id="val1" class="check" type="checkbox" name="animals[]" value="1" checked />Кошка</p>
+			<p><input id="val2" class="check" type="checkbox" name="animals[]" value="2" checked />Собака</p>
+			<p><input id="val4" class="check" type="checkbox" name="animals[]" value="4" />Попугай</p>
+			<p><input id="val8" class="check" type="checkbox" name="animals[]" value="8" />Рыбки</p>
+			<p><input id="val16" class="check" type="checkbox" name="animals[]" value="16" checked />Рептилии</p>
+			<p><input id="zero" class="check" type="checkbox" name="animals[]" value="0" />ЖИВОТНЫЕ ОТСУТСТВУЮТ</p>
+			<p><input class="input" id="quantity" type="number" name="quantity" value="19"> <span id="errmsg"></span></p>
+		</form>
+	</div>
+
+	<div id="result">
+		<p></p>
+	</div>
+
+
+</body>
+
+</html>
